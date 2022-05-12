@@ -1,0 +1,232 @@
+{% extends "./base.html" %}
+
+{% block title %}
+
+homepage-cart
+
+{% endblock title %}
+
+{% block style %}
+
+<style>
+    .i_image {
+        max-width: 50px;
+    }
+
+    .item_detail_body {
+        /* min-height: 100vh; */
+        font-size: smaller;
+
+    }
+
+    .title {
+        text-decoration: none;
+        color: green;
+    }
+
+    .submit {
+        margin: 10px auto;
+        flex-direction: column;
+        width: fit-content;
+    }
+</style>
+
+
+{% endblock style %}
+
+{% block body %}
+
+
+
+<div class="item_detail_body">
+    <ul class="list-group subtotal ">
+    </ul>
+    <ul class="list-group details">
+
+    </ul>
+</div>
+
+<form class="row g-3 needs-validation" novalidate>
+    <div class="col-md-4">
+      <label for="validationCustom01" class="form-label">First name</label>
+      <input type="text" class="form-control" id="validationCustom01" value="Mark" required>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-4">
+      <label for="validationCustom02" class="form-label">Last name</label>
+      <input type="text" class="form-control" id="validationCustom02" value="Otto" required>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-4">
+      <label for="validationCustomUsername" class="form-label">Phone Number</label>
+      <div class="input-group has-validation">
+        <span class="input-group-text" id="inputGroupPrepend">+91</span>
+        <input type="tel" class="form-control" id="validationCustomUsername" pattern="[0-9]{10}" aria-describedby="inputGroupPrepend" required>
+        <div class="invalid-feedback">
+          Please enter correct number
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+        <label class="form-check-label" for="invalidCheck">
+          Agree to terms and conditions
+        </label>
+        <div class="invalid-feedback">
+          You must agree before submitting.
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <button class="btn btn-primary" type="submit">Submit form</button>
+    </div>
+  </form>
+
+
+
+{% endblock body %}
+
+
+{% block js %}
+
+<script>
+    
+  
+
+    var container = document.querySelector(".details")
+    var head = document.querySelector(".subtotal")
+    const fetch_item = () => {
+        var items = JSON.parse(localStorage.getItem("item_detail"))
+        var quant = JSON.parse(localStorage.getItem("cart"))
+        total_price = 0
+        for (var i in items) {
+            container.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-center"><span>
+  <span class="images"><img src=${items[i]["image"]} alt="item _image" class="i_image"   id="i_${i}"  ></span>
+    <a     href="http://159.89.167.43/product/${items[i]["title"]}"      class="title">${items[i]["title"].slice(0, 20) + "..."}</a></span><span  style="font-size:medium;" >
+    <span class="badge bg-primary rounded-pill">${quant[i]["quantity"]} </span> <button class="btn btn-danger" ><i class="bi bi-trash" id="delete_${i}"   onclick="delete_item(${i})" ></i></button> </span>
+  </li>`
+
+            total_price = (total_price + parseInt(items[i]["price"])) * quant[i]["quantity"]
+
+        }
+        head.innerHTML = `
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+    SUBTOTAL
+    <span class="badge bg-primary rounded-pill" id="total_price">${total_price}</span>
+  </li>
+        `
+    }
+
+
+
+
+
+    fetch_item()
+    const delete_item = (id) => {
+
+        var items = JSON.parse(localStorage.getItem("item_detail"))
+        var quant = JSON.parse(localStorage.getItem("cart"))
+        items.splice(id, 1)
+        quant.splice(id, 1)
+        localStorage.setItem("cart", JSON.stringify(quant))
+        localStorage.setItem("item_detail", JSON.stringify(items))
+        container.innerHTML = ""
+        fetch_item()
+        update()
+
+        console.log(items)
+    }
+
+
+    (function () {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+        var otp_form = document.querySelector(".otp")
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+                
+            })
+    })()
+
+
+
+
+
+
+    $(document).ready(function () {
+
+        $('#add').click(function () {
+
+            var user = {
+                "first name" : document.querySelector(".fname").value,
+                "last name" : document.querySelector(".lname").value,
+                "phone number" : document.querySelector(".phnum").value
+            }
+
+            var details_json = [
+                {
+                    "subtotal" :  document.querySelector("#total_price").innerHTML,
+                },
+                
+                
+        ]
+            var items = JSON.parse(localStorage.getItem('item_detail'))
+            var quant = JSON.parse(localStorage.getItem('cart'))
+            for (var i in items){
+                var pr = {
+                     "name" :items[i]["title"], 
+                     "price" :items[i]["price"], 
+                     "quanity" :quant[i]["quantity"]
+                } 
+
+                details_json.push(pr)
+            }
+console.log(user)
+console.log(details_json)
+            
+
+            event.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "/order/",
+                data: {
+                     user,
+                    details_json
+                },
+                success: function () {
+                   alert("you sucess fully sended data")
+                }
+            });
+            return false;
+        });
+
+    });
+
+
+
+
+
+
+</script>
+
+
+
+{% endblock js %}

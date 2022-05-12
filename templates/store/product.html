@@ -1,0 +1,151 @@
+{% extends "./base.html" %}
+
+{% block title %}
+kirana store - product page
+{% endblock title %}
+
+
+{% block style %}
+<style>
+  .product {
+    display: flex;
+    flex-direction: column;
+    min-width: 190px;
+    max-width: 190px;
+    max-height: 400px;
+    margin: 10px 10px 10px 10px;
+    justify-content:flex-end;
+  }
+  .product img{
+    max-height: 190px;
+  }
+
+  .cont {
+    overflow-y: hidden;
+    overflow-x: scroll;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  @media only screen and (max-width: 700px) {
+    .containar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .product {
+      min-width: 130px
+    }
+
+    body {
+      font-size: small;
+    }
+
+    button {
+      font-size: small;
+    }
+  }
+  .p_detail{
+    margin:auto;
+  }
+    .p_img img{
+        width: 100%    ;
+    }
+
+  @media only screen and (max-width: 700px) {
+    .containar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .product {
+      min-width: 130px
+    }
+  }
+</style>
+{% endblock style %}
+
+
+{% block body %}
+
+<div class="row pr" style=" max-width:1300px; margin:auto; ">
+    <div class="p_img d-flex   col-12 col-md-5 ">
+        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" data-interval="false" >
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+        <img src="/media/{{p.images1}}" alt="nothign here">
+              </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+    </div>
+    <div class="p_detail col-12 col-md-7 ">
+      <h2>{{p.title}}</h2>
+      <p>by <span style="color: green;" >BRAND: {{p.Brand_name}}</span></p>
+      <span style="color: gray; font-weight: lighter; font-size: medium;" >  M.R.P {{p.mrp}}</span><br>
+      <p>Price: <span style="font-weight: bolder; font-size: larger; color: green;">&#8377 {{p.Price}}</span></p>{% load mathfilters %}
+      <p>you save :<span style="font-weight: bolder; font-size: medium; color: green;">&#8377 {{ p.mrp|sub:p.Price }}</span> </p>
+
+      <button class="btn btn-outline-success" >
+        Add to cart
+      </button>
+      <button class="btn btn-outline-success" >
+        <select name="quantity" id="quantity" style="outline: none; border: none;">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </button>
+
+      <p style="font-weight: bold;" >guaranteed divlivery within <span style="color: green; font-weight: bolder;" >24 hr</span> after the order placed</p>
+
+    </div>
+</div>
+<h1> Featured items you may like </h1>
+<div class="d-flex cont">
+
+{% for product in products %}
+
+<div class="product">
+    <img src="/media/{{product.images1}}" class="card-img-top" alt="...">
+    <div class="detail">
+      <a href='http://127.0.0.1:8000/product/{{product.title}}'>
+        <p style="margin-bottom: 0px; color: green;">{{product.title|truncatechars:40}} </p>
+      </a>
+      <p>&#8377<span style="font-weight: bolder; font-size: larger;">{{product.Price}}</span><span
+          style="color: gray; font-weight: lighter; font-size: small;">  M.R.P {{product.mrp}}</span></p>
+      <div class="btn btn-outline-success quant" style="width: 100%; margin: 0px 0px 3px 0px ;">
+        <label for="quantity">Quantity:</label>
+        <select name="quantity" id="quantity" style="outline: none; border: none;">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </div>
+
+      <button class="btn btn-outline-success" style="width: 100%;">
+        Add To Bag
+      </button>
+    </div>
+  </div>
+
+{% endfor %}  
+
+</div>
+
+{% endblock body %}
+
+

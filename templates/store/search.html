@@ -1,0 +1,68 @@
+{% extends "./base.html" %}
+{% block title %}
+category
+
+{% endblock title %}
+
+{% block style %}
+
+<style>
+    .product{
+        padding: 25px;
+    }
+    .img{
+        margin: auto;
+    }
+    a{
+        text-decoration: none;
+    }
+</style>
+
+{% endblock style %}
+
+
+{% block body %}
+
+<div class="row">
+
+
+{% for product in products %}
+
+
+    <div class="product col-12 col-md-3 ">
+        <div class="row">
+            <div class="img col-6 col-md-12">
+                <img src="/media/{{product.images1}}" class="card-img-top" alt="...">
+            </div>
+            <div class="p_deatil col-6 col-md-12">
+                <div class="row">
+                    <a href='product/'>
+                        <p style="margin-bottom: 0px; color: green;">{{product.title}}</p>
+                    </a>
+                    <p>&#8377<span style="font-weight: bolder; font-size: larger;">{{product.price}}</span><span
+                            style="color: gray; font-weight: lighter; font-size: small;"> M.R.P {{product.mrp}}</span></p>
+                    <div class="btn btn-outline-success quant" style="width: 100%; margin: 0px 0px 3px 0px ;">
+                        <label for="quantity">Quantity:</label>
+                        <select name="quantity" id="quantity" style="outline: none; border: none;">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-outline-success" style="width: 100%;">
+                        Add to cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endfor %}
+
+</div>
+
+{% endblock body %}
